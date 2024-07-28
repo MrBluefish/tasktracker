@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple To-Do List</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #97d8ec;
+    margin: 40px;
+    padding: 10px;
+    box-shadow: 0 0 10px 0 #626fe6;
+}
+
+.create {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+h1 {
+    color: #ADD8E6; /* Light Blue for calmness */
+    background: radial-gradient(ellipse at center, #97d8ec, #3e97cf); /* Radial gradient */
+    padding: 20px; /* Add padding for better readability */
+    border: 1px solid #e85b48;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 2px 2px 4px #e85b48;
+}
+
+#newItem, button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+}
+
+button {
+   background: #3e4ccf; 
+   color: #FFFFFF;
+}
+
+button:hover {
+    background-color: #e85b48;
+    color: #031bec;
+}
+
+#newItem {
+    color: #ffffff;
+    width: 15%;
+    max-width: 310px;
+    height: 35px;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+li {
+    color: #ffffff;
+    margin-top: 10px;
+    background: #3e4ccf;
+    padding: 10px;
+    transition: all 0.3s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li:hover {
+    background: #e85b48;
+}
+
+.task-content {
+    display: flex;
+    align-items: center;
+    width: 10%;
+    flex: 1;
+}
+
+.task-text {
+    margin-left: 10px;
+    flex: 1;
+    width: 10%;
+}
+
+.completed {
+    background: #3e4ccf; 
+    color:#ADD8E6;
+    opacity: 0.5;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: #555;
+    margin-left: 10px;
+}
+
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content button {
+    color:#3e4ccf ;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dropdown-content button:hover {
+    background-color: #e85b48;
+    color: #f9f9f9;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .create {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #newItem, button {
+        width: 100%;
+        max-width: none;
+        margin: 5px 0;
+    }
+}
+</style>
+</head>
+<body>
+<h1 class="name">TaskTracker - Smart, streamlined list management</h1>
+<div class="create">
+<input class="task-button" type="text" id="newItem" placeholder="Add a new task" tabindex="0">
+<button onclick="addItem()" tabindex="0">Add Item</button>
+<div class="dropdown">
+    <button tabindex="0">Options</button>
+    <div class="dropdown-content">
+        <button onclick="clearAll()" tabindex="0">Clear All</button>
+        <button onclick="saveList()" tabindex="0">Save List</button>
+        <button onclick="shareList()" tabindex="0">Share List</button>
+        <button onclick="markAllCompleted()" tabindex="0">Mark All Completed</button>
+        <button onclick="showAll()" tabindex="0">Show All</button>
+        <button onclick="showCompleted()" tabindex="0">Show Completed</button>
+        <button onclick="showIncomplete()" tabindex="0">Show Incomplete</button>
+    </div>
+</div>
+</div>
+<ul id="todoList"></ul>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    loadItems();
+    setupButtonNavigation();
+});
+
+function addItem() {
+    const newItem = document.getElementById('newItem').value;
+    if (newItem.trim() !== '') {
+        const todoList = document.getElementById('todoList');
+        const li = document.createElement('li');
+
+        const taskContent = document.createElement('div');
+        taskContent.classList.add('task-content');
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.onchange = function() {
+            this.parentElement.classList.toggle('completed');
+            if (this.checked) {
+                const timestamp = new Date().toLocaleString();
+                const span = document.createElement('span');
+                span.textContent = `Completed at: ${timestamp}`;
+                span.classList.add('timestamp');
+                taskContent.appendChild(span);
+                moveToBottom(li);
+            } else {
+                const span = taskContent.querySelector('.timestamp');
+                if (span) {
+                    span.remove();
+                }
+            }
+            saveItems();
+        };
+
+        const label = document.createElement('label');
+        label.textContent = newItem;
+        label.classList.add('task-text');
+
+        taskContent.appendChild(checkbox);
+        taskContent.appendChild(label);
+        li.appendChild(taskContent);
+        todoList.appendChild(li);
+
+        document.getElementById('newItem').value = ''; // Clear input field
+        saveItems();
+    }
+}
+
+function saveItems() {
+    const todos = [];
+    document.querySelectorAll('#todoList li').forEach(item => {
+        const text = item.querySelector('label').textContent;
+        const completed = item.querySelector('input[type="checkbox"]').checked;
+        const timestampElement = item.querySelector('.timestamp');
+        const timestamp = timestampElement ? timestampElement.textContent.replace('Completed at: ', '') : '';
+        todos.push({ text, completed, timestamp });
+    });
+    localStorage.setItem('todoItems', JSON.stringify(todos));
+}
+
+function loadItems() {
+    const todos = JSON.parse(localStorage.getItem('todoItems'));
+    if (todos && todos.length > 0) {
+        const todoList = document.getElementById('todoList');
+        todos.forEach(item => {
+            if (item && item.text !== undefined) {
+                const li = document.createElement('li');
+
+                const taskContent = document.createElement('div');
+                taskContent.classList.add('task-content');
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = item.completed;
+                checkbox.onchange = function() {
+                    this.parentElement.classList.toggle('completed');
+                    if (this.checked) {
+                        const timestamp = new Date().toLocaleString();
+                        const span = document.createElement('span');
+                        span.textContent = `Completed at: ${timestamp}`;
+                        span.classList.add('timestamp');
+                        taskContent.appendChild(span);
+                        moveToBottom(li);
+                    } else {
+                        const span = taskContent.querySelector('.timestamp');
+                        if (span) {
+                            span.remove();
+                        }
+                    }
+                    saveItems();
+                };
+
+                const label = document.createElement('label');
+                label.textContent = item.text;
+                label.classList.add('task-text');
+
+                if (item.completed) {
+                    li.classList.add('completed');
+                    if (item.timestamp) {
+                        const span = document.createElement('span');
+                        span.textContent = `Completed at: ${item.timestamp}`;
+                        span.classList.add('timestamp');
+                        taskContent.appendChild(span);
+                    }
+                }
+
+                taskContent.appendChild(checkbox);
+                taskContent.appendChild(label);
+                li.appendChild(taskContent);
+                todoList.appendChild(li);
+            }
+        });
+    }
+}
+
+function clearAll() {
+    localStorage.removeItem('todoItems');
+    const todoList = document.getElementById('todoList');
+    todoList.innerHTML = '';
+}
+
+function saveList() {
+    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
+    const worksheet = XLSX.utils.json_to_sheet(todos);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
+
+    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
+
+    const blob = new Blob([s2ab
+
+(wbout)], { type: "application/octet-stream" });
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'todo-list.xlsx';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function s2ab(s) {
+    const buf = new ArrayBuffer(s.length);
+    const view = new Uint8Array(buf);
+    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
+
+function shareList() {
+    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
+    const shareData = {
+        title: 'My To-Do List',
+        text: todos.map(item => `${item.completed ? '✔️' : '❌'} ${item.text} ${item.timestamp ? `(Completed at: ${item.timestamp})` : ''}`).join('\n')
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).then(() => {
+            console.log('List shared successfully');
+        }).catch((error) => {
+            console.error('Error sharing list:', error);
+        });
+    } else {
+        alert('Web Share API is not supported in your browser.');
+    }
+}
+
+function markAllCompleted() {
+    document.querySelectorAll('#todoList li').forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (!checkbox.checked) {
+            checkbox.checked = true;
+            item.classList.add('completed');
+            const timestamp = new Date().toLocaleString();
+            const span = document.createElement('span');
+            span.textContent = `Completed at: ${timestamp}`;
+            span.classList.add('timestamp');
+            item.querySelector('.task-content').appendChild(span);
+            moveToBottom(item);
+        }
+    });
+    saveItems();
+}
+
+function showAll() {
+    document.querySelectorAll('#todoList li').forEach(item => {
+        item.style.display = '';
+    });
+}
+
+function showCompleted() {
+    document.querySelectorAll('#todoList li').forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (checkbox.checked) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function showIncomplete() {
+    document.querySelectorAll('#todoList li').forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        if (!checkbox.checked) {
+            item.style.display = '';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function moveToBottom(element) {
+    const todoList = document.getElementById('todoList');
+    todoList.appendChild(element);
+    console.log("Moved to bottom:", element);
+}
+
+function setupButtonNavigation() {
+    const buttons = document.querySelectorAll('button, input[type="text"]');
+    buttons.forEach(button => {
+        button.setAttribute('tabindex', '0');
+        button.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                button.click();
+            }
+        });
+    });
+}
+</script>
+</body>
+</html>
