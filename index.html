@@ -5,160 +5,160 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simple To-Do List</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #97d8ec;
-    margin: 0;
-    padding: 10px;
-    box-shadow: 0 0 10px 0 #626fe6;
-}
-
-.create {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-h1 {
-    color: #ADD8E6; /* Light Blue for calmness */
-    background: radial-gradient(ellipse at center, #97d8ec, #3e97cf); /* Radial gradient */
-    padding: 20px; /* Add padding for better readability */
-    border: 1px solid #e85b48;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-shadow: 2px 2px 4px #e85b48;
-}
-
-#newItem, button, .dropdown button {
-    padding: 10px;
-    margin: 5px;
-    border: none;
-}
-
-button, .dropdown button {
-   background: #3e4ccf; 
-   color: #FFFFFF;
-}
-
-button:hover, .dropdown button:hover {
-    background-color: #e85b48;
-    color: #031bec;
-}
-
-#newItem {
-    color: #f96204;
-    text-shadow: 2px 2px 4px 0px #0f0f0f;
-    width: 100%;
-    max-width: 310px;
-    height: 35px;
-    box-sizing: border-box;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-li {
-    color: #ffffff;
-    margin-top: 10px;
-    background: #3e4ccf;
-    padding: 10px;
-    transition: all 0.3s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-li:hover {
-    background: #e85b48;
-}
-
-.task-content {
-    display: flex;
-    align-items: center;
-    width: 10%;
-    flex: 1;
-}
-
-.task-text {
-    color:rgb(249, 248, 248);
-    margin-left: 10px;
-    flex: 1;
-    width: 10%;
-}
-
-.completed {
-    background: #3e4ccf; 
-    color:#ADD8E6;
-    opacity: 0.5;
-}
-
-.timestamp {
-    font-size: 0.8em;
-    color: #555;
-    margin-left: 10px;
-}
-
-/* Dropdown Menu */
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px #07557c33;
-    z-index: 1;
-}
-
-.dropdown-content button {
-    color:#e85b48;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.dropdown-content button:hover {
-    background-color: #e85b48;
-    color: #f9f9f9;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-/* Responsive Design */
-@media (max-width: 600px) {
-    .create {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    #newItem, button, .dropdown button {
-        width: 100%;
-        max-width: none;
-        margin: 5px 0;
-    }
-
-    .dropdown-content {
-        position: static;
-        min-width: 100%;
-    }
-}
-</style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #97d8ec;
+      margin: 0;
+      padding: 10px;
+      box-shadow: 0 0 10px 0 #626fe6;
+  }
+  
+  .create {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+  }
+  
+  h1 {
+      color: #ADD8E6; /* Light Blue for calmness */
+      background: radial-gradient(ellipse at center, #97d8ec, #3e97cf); /* Radial gradient */
+      padding: 20px; /* Add padding for better readability */
+      border: 1px solid #e85b48;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-shadow: 2px 2px 4px #e85b48;
+  }
+  
+  #newItem, button, .dropdown button {
+      padding: 10px;
+      margin: 5px;
+      border: none;
+  }
+  
+  button, .dropdown button {
+     background: #3e4ccf; 
+     color: #FFFFFF;
+  }
+  
+  button:hover, .dropdown button:hover {
+      background-color: #e85b48;
+      color: #031bec;
+  }
+  
+  #newItem {
+      color: #f96204;
+      text-shadow: 2px 2px 4px 0px #0f0f0f;
+      width: 100%;
+      max-width: 310px;
+      height: 35px;
+      box-sizing: border-box;
+  }
+  
+  ul {
+      list-style-type: none;
+      padding: 0;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+  }
+  
+  li {
+      color: #ffffff;
+      margin-top: 10px;
+      background: #3e4ccf;
+      padding: 10px;
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  
+  li:hover {
+      background: #e85b48;
+  }
+  
+  .task-content {
+      display: flex;
+      align-items: center;
+      width: 10%;
+      flex: 1;
+  }
+  
+  .task-text {
+      color:rgb(249, 248, 248);
+      margin-left: 10px;
+      flex: 1;
+      width: 10%;
+  }
+  
+  .completed {
+      background: #3e4ccf; 
+      color:#ADD8E6;
+      opacity: 0.5;
+  }
+  
+  .timestamp {
+      font-size: 0.8em;
+      color: #929191;
+      margin-left: 10px;
+  }
+  
+  /* Dropdown Menu */
+  .dropdown {
+      position: relative;
+      display: inline-block;
+  }
+  
+  .dropdown-content {
+      display: none;
+      position: absolute;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px #07557c33;
+      z-index: 1;
+  }
+  
+  .dropdown-content button {
+      color:#e85b48;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+  }
+  
+  .dropdown-content button:hover {
+      background-color: #e85b48;
+      color: #f9f9f9;
+  }
+  
+  .dropdown:hover .dropdown-content {
+      display: block;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 600px) {
+      .create {
+          flex-direction: column;
+          align-items: stretch;
+      }
+  
+      #newItem, button, .dropdown button {
+          width: 100%;
+          max-width: none;
+          margin: 5px 0;
+      }
+  
+      .dropdown-content {
+          position: static;
+          min-width: 100%;
+      }
+  }
+  </style>
 </head>
 <body>
 <h1 class="name">TaskTracker - Smart, streamlined list management</h1>
@@ -233,7 +233,7 @@ function saveItems() {
     const todos = [];
     document.querySelectorAll('#todoList li').forEach(item => {
         const text = item.querySelector('label').textContent;
-        const completed = item.querySelector('input[type="checkbox"]').checked;
+        const completed = item.querySelector('input[type="checkbox"]').checked ? "complete" : "incomplete";
         const timestampElement = item.querySelector('.timestamp');
         const timestamp = timestampElement ? timestampElement.textContent.replace('Completed at: ', '') : '';
         todos.push({ text, completed, timestamp });
@@ -254,7 +254,7 @@ function loadItems() {
 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
-                checkbox.checked = item.completed;
+                checkbox.checked = item.completed === "complete";
                 checkbox.onchange = function() {
                     this.parentElement.classList.toggle('completed');
                     if (this.checked) {
@@ -277,7 +277,7 @@ function loadItems() {
                 label.textContent = item.text;
                 label.classList.add('task-text');
 
-                if (item.completed) {
+                if (item.completed === "complete") {
                     li.classList.add('completed');
                     if (item.timestamp) {
                         const span = document.createElement('span');
@@ -331,7 +331,7 @@ function shareList() {
     const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
     const shareData = {
         title: 'My To-Do List',
-        text: todos.map(item => `${item.completed ? '✔️' : '❌'} ${item.text} ${item.timestamp ? `(Completed at: ${item.timestamp})` : ''}`).join('\n')
+        text: todos.map(item => `${item.completed === "complete" ? '✔️' : '❌'} ${item.text} ${item.timestamp ? `(Completed at: ${item.timestamp})` : ''}`).join('\n')
     };
 
     if (navigator.share) {
