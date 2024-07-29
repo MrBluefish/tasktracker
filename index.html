@@ -8,7 +8,7 @@
   body {
     font-family: Arial, sans-serif;
     background: #97d8ec;
-    margin: 40px;
+    margin: 0;
     padding: 10px;
     box-shadow: 0 0 10px 0 #626fe6;
 }
@@ -19,6 +19,7 @@
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
 h1 {
@@ -33,25 +34,25 @@ h1 {
     text-shadow: 2px 2px 4px #e85b48;
 }
 
-#newItem, button {
+#newItem, button, .dropdown button {
     padding: 10px;
     margin: 5px;
     border: none;
 }
 
-button {
+button, .dropdown button {
    background: #3e4ccf; 
    color: #FFFFFF;
 }
 
-button:hover {
+button:hover, .dropdown button:hover {
     background-color: #e85b48;
     color: #031bec;
 }
 
 #newItem {
     color: #ffffff;
-    width: 15%;
+    width: 100%;
     max-width: 310px;
     height: 35px;
     box-sizing: border-box;
@@ -121,7 +122,7 @@ li:hover {
 }
 
 .dropdown-content button {
-    color:#3e4ccf ;
+    color:#e85b48;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
@@ -145,10 +146,15 @@ li:hover {
         align-items: stretch;
     }
 
-    #newItem, button {
+    #newItem, button, .dropdown button {
         width: 100%;
         max-width: none;
         margin: 5px 0;
+    }
+
+    .dropdown-content {
+        position: static;
+        min-width: 100%;
     }
 }
 </style>
@@ -303,9 +309,7 @@ function saveList() {
 
     const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
 
-    const blob = new Blob([s2ab
-
-(wbout)], { type: "application/octet-stream" });
+    const blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
