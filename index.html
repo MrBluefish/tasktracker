@@ -4,409 +4,242 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simple To-Do List</title>
-<style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #97d8ec;
-      margin: 0;
-      padding: 10px;
-      box-shadow: 0 0 10px 0 #626fe6;
-  }
-  
-  .create {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: row;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-  }
-  
-  h1 {
-      color: #ADD8E6; /* Light Blue for calmness */
-      background: radial-gradient(ellipse at center, #97d8ec, #3e97cf); /* Radial gradient */
-      padding: 20px; /* Add padding for better readability */
-      border: 1px solid #e85b48;
-      margin-bottom: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-shadow: 2px 2px 4px #e85b48;
-  }
-  
-  #newItem, button, .dropdown button {
-      padding: 10px;
-      margin: 5px;
-      border: none;
-  }
-  
-  button, .dropdown button {
-     background: #3e4ccf; 
-     color: #FFFFFF;
-  }
-  
-  button:hover, .dropdown button:hover {
-      background-color: #e85b48;
-      color: #031bec;
-  }
-  
-  #newItem {
-      color: #f96204;
-      text-shadow: 2px 2px 4px 0px #0f0f0f;
-      width: 100%;
-      max-width: 310px;
-      height: 35px;
-      box-sizing: border-box;
-  }
-  
-  ul {
-      list-style-type: none;
-      padding: 0;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-  }
-  
-  li {
-      color: #ffffff;
-      margin-top: 10px;
-      background: #3e4ccf;
-      padding: 10px;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-  }
-  
-  li:hover {
-      background: #e85b48;
-  }
-  
-  .task-content {
-      display: flex;
-      align-items: center;
-      width: 10%;
-      flex: 1;
-  }
-  
-  .task-text {
-      color:rgb(249, 248, 248);
-      margin-left: 10px;
-      flex: 1;
-      width: 10%;
-  }
-  
-  .completed {
-      background: #3e4ccf; 
-      color:#ADD8E6;
-      opacity: 0.5;
-  }
-  
-  .timestamp {
-      font-size: 0.8em;
-      color: #929191;
-      margin-left: 10px;
-  }
-  
-  /* Dropdown Menu */
-  .dropdown {
-      position: relative;
-      display: inline-block;
-  }
-  
-  .dropdown-content {
-      display: none;
-      position: absolute;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px #07557c33;
-      z-index: 1;
-  }
-  
-  .dropdown-content button {
-      color:#e85b48;
-      padding: 12px 16px;
-      text-decoration: none;
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-  }
-  
-  .dropdown-content button:hover {
-      background-color: #e85b48;
-      color: #f9f9f9;
-  }
-  
-  .dropdown:hover .dropdown-content {
-      display: block;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 600px) {
-      .create {
-          flex-direction: column;
-          align-items: stretch;
-      }
-  
-      #newItem, button, .dropdown button {
-          width: 100%;
-          max-width: none;
-          margin: 5px 0;
-      }
-  
-      .dropdown-content {
-          position: static;
-          min-width: 100%;
-      }
-  }
-  </style>
+<link rel="stylesheet" href="style.css"> 
+
 </head>
 <body>
-<h1 class="name">TaskTracker - Smart, streamlined list management</h1>
-<div class="create">
-<input class="task-button" type="text" id="newItem" placeholder="Add a new task" tabindex="0">
-<button onclick="addItem()" tabindex="0">Add Item</button>
-<div class="dropdown">
-    <button tabindex="0">Options</button>
-    <div class="dropdown-content">
-        <button onclick="clearAll()" tabindex="0">Clear All</button>
-        <button onclick="saveList()" tabindex="0">Save List</button>
-        <button onclick="shareList()" tabindex="0">Share List</button>
-        <button onclick="markAllCompleted()" tabindex="0">Mark All Completed</button>
-        <button onclick="showAll()" tabindex="0">Show All</button>
-        <button onclick="showCompleted()" tabindex="0">Show Completed</button>
-        <button onclick="showIncomplete()" tabindex="0">Show Incomplete</button>
+    <h1>TaskTracker</h1>
+    <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
+
+    <div class="timer-container">
+        <label for="timeInput">Set Timer (seconds):</label>
+        <input type="number" id="timeInput" min="0" placeholder="Enter seconds">
+        <button onclick="startTimer()">Start Timer</button>
+        <div id="timerDisplay">00:00</div>
     </div>
-</div>
-</div>
-<ul id="todoList"></ul>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    loadItems();
-    setupButtonNavigation();
-});
 
-function addItem() {
-    const newItem = document.getElementById('newItem').value;
-    if (newItem.trim() !== '') {
-        const todoList = document.getElementById('todoList');
-        const li = document.createElement('li');
+    <div class="container">
+        <ul id="todoList"></ul>
+        <textarea id="detailsBox" placeholder="Enter details here..."></textarea>
+    </div>
 
-        const taskContent = document.createElement('div');
-        taskContent.classList.add('task-content');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadItems();
 
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.onchange = function() {
-            this.parentElement.classList.toggle('completed');
-            if (this.checked) {
-                const timestamp = new Date().toLocaleString();
-                const span = document.createElement('span');
-                span.textContent = `Completed at: ${timestamp}`;
-                span.classList.add('timestamp');
-                taskContent.appendChild(span);
-                moveToBottom(li);
-            } else {
-                const span = taskContent.querySelector('.timestamp');
-                if (span) {
-                    span.remove();
+            // Close the dropdown if the user clicks outside of it
+            window.onclick = function(event) {
+                if (!event.target.matches('.dropdown button')) {
+                    closeDropdown();
                 }
             }
-            saveItems();
-        };
+        });
 
-        const label = document.createElement('label');
-        label.textContent = newItem;
-        label.classList.add('task-text');
+        let timerInterval;
 
-        taskContent.appendChild(checkbox);
-        taskContent.appendChild(label);
-        li.appendChild(taskContent);
-        todoList.appendChild(li);
+        function startTimer() {
+            const inputSeconds = parseInt(document.getElementById('timeInput').value);
+            if (isNaN(inputSeconds) || inputSeconds <= 0) {
+                alert("Please enter a valid number of seconds.");
+                return;
+            }
 
-        document.getElementById('newItem').value = ''; // Clear input field
-        saveItems();
-    }
-}
+            let timeRemaining = inputSeconds;
+            updateTimerDisplay(timeRemaining);
 
-function saveItems() {
-    const todos = [];
-    document.querySelectorAll('#todoList li').forEach(item => {
-        const text = item.querySelector('label').textContent;
-        const completed = item.querySelector('input[type="checkbox"]').checked ? "complete" : "incomplete";
-        const timestampElement = item.querySelector('.timestamp');
-        const timestamp = timestampElement ? timestampElement.textContent.replace('Completed at: ', '') : '';
-        todos.push({ text, completed, timestamp });
-    });
-    localStorage.setItem('todoItems', JSON.stringify(todos));
-}
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay(timeRemaining);
 
-function loadItems() {
-    const todos = JSON.parse(localStorage.getItem('todoItems'));
-    if (todos && todos.length > 0) {
-        const todoList = document.getElementById('todoList');
-        todos.forEach(item => {
-            if (item && item.text !== undefined) {
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up!");
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timerDisplay').textContent =
+                `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function toggleDropdown() {
+            document.getElementById("dropdown-content").classList.toggle("show");
+        }
+
+        function closeDropdown() {
+            document.getElementById("dropdown-content").classList.remove("show");
+        }
+
+        function performAction(action) {
+            action();
+            closeDropdown();
+        }
+
+        function addItem() {
+            const newItem = document.getElementById('newItem').value;
+            if (newItem.trim() !== '') {
+                const todoList = document.getElementById('todoList');
                 const li = document.createElement('li');
-
-                const taskContent = document.createElement('div');
-                taskContent.classList.add('task-content');
 
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
-                checkbox.checked = item.completed === "complete";
                 checkbox.onchange = function() {
                     this.parentElement.classList.toggle('completed');
-                    if (this.checked) {
-                        const timestamp = new Date().toLocaleString();
-                        const span = document.createElement('span');
-                        span.textContent = `Completed at: ${timestamp}`;
-                        span.classList.add('timestamp');
-                        taskContent.appendChild(span);
-                        moveToBottom(li);
-                    } else {
-                        const span = taskContent.querySelector('.timestamp');
-                        if (span) {
-                            span.remove();
-                        }
-                    }
                     saveItems();
                 };
 
                 const label = document.createElement('label');
-                label.textContent = item.text;
-                label.classList.add('task-text');
+                label.textContent = newItem;
+                label.ondblclick = function() {
+                    editItem(this);
+                };
 
-                if (item.completed === "complete") {
-                    li.classList.add('completed');
-                    if (item.timestamp) {
-                        const span = document.createElement('span');
-                        span.textContent = `Completed at: ${item.timestamp}`;
-                        span.classList.add('timestamp');
-                        taskContent.appendChild(span);
-                    }
-                }
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = function() {
+                    this.parentElement.remove();
+                    saveItems();
+                };
 
-                taskContent.appendChild(checkbox);
-                taskContent.appendChild(label);
-                li.appendChild(taskContent);
+                li.appendChild(checkbox);
+                li.appendChild(label);
+                li.appendChild(deleteButton);
                 todoList.appendChild(li);
+
+                document.getElementById('newItem').value = ''; // Clear input field
+                saveItems();
             }
-        });
-    }
-}
-
-function clearAll() {
-    localStorage.removeItem('todoItems');
-    const todoList = document.getElementById('todoList');
-    todoList.innerHTML = '';
-}
-
-function saveList() {
-    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
-    const worksheet = XLSX.utils.json_to_sheet(todos);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
-
-    const wbout = XLSX.write(workbook, { bookType: 'xlsx', type: 'binary' });
-
-    const blob = new Blob([s2ab(wbout)], { type: "application/octet-stream" });
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'todo-list.xlsx';
-    a.click();
-    URL.revokeObjectURL(url);
-}
-
-function s2ab(s) {
-    const buf = new ArrayBuffer(s.length);
-    const view = new Uint8Array(buf);
-    for (let i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
-    return buf;
-}
-
-function shareList() {
-    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
-    const shareData = {
-        title: 'My To-Do List',
-        text: todos.map(item => `${item.completed === "complete" ? '✔️' : '❌'} ${item.text} ${item.timestamp ? `(Completed at: ${item.timestamp})` : ''}`).join('\n')
-    };
-
-    if (navigator.share) {
-        navigator.share(shareData).then(() => {
-            console.log('List shared successfully');
-        }).catch((error) => {
-            console.error('Error sharing list:', error);
-        });
-    } else {
-        alert('Web Share API is not supported in your browser.');
-    }
-}
-
-function markAllCompleted() {
-    document.querySelectorAll('#todoList li').forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (!checkbox.checked) {
-            checkbox.checked = true;
-            item.classList.add('completed');
-            const timestamp = new Date().toLocaleString();
-            const span = document.createElement('span');
-            span.textContent = `Completed at: ${timestamp}`;
-            span.classList.add('timestamp');
-            item.querySelector('.task-content').appendChild(span);
-            moveToBottom(item);
         }
-    });
-    saveItems();
-}
 
-function showAll() {
-    document.querySelectorAll('#todoList li').forEach(item => {
-        item.style.display = '';
-    });
-}
-
-function showCompleted() {
-    document.querySelectorAll('#todoList li').forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (checkbox.checked) {
-            item.style.display = '';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-function showIncomplete() {
-    document.querySelectorAll('#todoList li').forEach(item => {
-        const checkbox = item.querySelector('input[type="checkbox"]');
-        if (!checkbox.checked) {
-            item.style.display = '';
-        } else {
-            item.style.display = 'none';
-        }
-    });
-}
-
-function moveToBottom(element) {
-    const todoList = document.getElementById('todoList');
-    todoList.appendChild(element);
-    console.log("Moved to bottom:", element);
-}
-
-function setupButtonNavigation() {
-    const buttons = document.querySelectorAll('button, input[type="text"]');
-    buttons.forEach(button => {
-        button.setAttribute('tabindex', '0');
-        button.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                button.click();
+        function editItem(label) {
+            const newText = prompt("Edit your task:", label.textContent);
+            if (newText !== null && newText.trim() !== '') {
+                label.textContent = newText;
+                saveItems();
             }
-        });
-    });
-}
-</script>
+        }
+
+        function saveItems() {
+            const todos = [];
+            document.querySelectorAll('#todoList li').forEach(item => {
+                const text = item.querySelector('label').textContent;
+                const completed = item.querySelector('input[type="checkbox"]').checked;
+                todos.push({ text, completed });
+            });
+            localStorage.setItem('todoItems', JSON.stringify(todos));
+        }
+
+        function loadItems() {
+            const todos = JSON.parse(localStorage.getItem('todoItems'));
+            if (todos && todos.length > 0) {
+                const todoList = document.getElementById('todoList');
+                todos.forEach(item => {
+                    if (item && item.text !== undefined) {
+                        const li = document.createElement('li');
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = item.completed;
+                        checkbox.onchange = function() {
+                            this.parentElement.classList.toggle('completed');
+                            saveItems();
+                        };
+
+                        const label = document.createElement('label');
+                        label.textContent = item.text;
+                        label.ondblclick = function() {
+                            editItem(this);
+                        };
+
+                        const deleteButton = document.createElement('button');
+                        deleteButton.textContent = 'Delete';
+                        deleteButton.onclick = function() {
+                            this.parentElement.remove();
+                            saveItems();
+                        };
+
+                        if (item.completed) {
+                            li.classList.add('completed');
+                        }
+
+                        li.appendChild(checkbox);
+                        li.appendChild(label);
+                        li.appendChild(deleteButton);
+                        todoList.appendChild(li);
+                    }
+                });
+            }
+        }
+
+        function clearAll() {
+            localStorage.removeItem('todoItems');
+            const todoList = document.getElementById('todoList');
+            todoList.innerHTML = '';
+        }
+
+        function markAllCompleted() {
+            document.querySelectorAll('#todoList li').forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                checkbox.checked = true;
+                item.classList.add('completed');
+            });
+            saveItems();
+        }
+
+        function filterTasks(filter) {
+            const items = document.querySelectorAll('#todoList li');
+            items.forEach(item => {
+                switch (filter) {
+                    case 'completed':
+                        item.style.display = item.querySelector('input[type="checkbox"]').checked ? 'flex' : 'none';
+                        break;
+                    case 'incomplete':
+                        item.style.display = !item.querySelector('input[type="checkbox"]').checked ? 'flex' : 'none';
+                        break;
+                    default:
+                        item.style.display = 'flex';
+                        break;
+                }
+            });
+        }
+
+        function saveList() {
+            const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
+            const blob = new Blob([JSON.stringify(todos, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'todo-list.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function shareList() {
+            const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
+            const shareData = {
+                title: 'My To-Do List',
+                text: todos.map(item => `${item.completed ? '☑️' : '🔘'} ${item.text}`).join('\n')
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).then(() => {
+                    console.log('List shared successfully');
+                }).catch((error) => {
+                    console.error('Error sharing list:', error);
+                });
+            } else {
+                alert('Web Share API is not supported in your browser.');
+            }
+        }
+    </script>
 </body>
 </html>
+
+
+
+
+
