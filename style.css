@@ -96,7 +96,7 @@ li {
     background-color: #fdfdcb;
     color: #333;
 }
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
     .container {
         flex-direction: column; /* Stack the list and text box vertically */
     }
