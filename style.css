@@ -96,6 +96,19 @@ li {
     background-color: #fdfdcb;
     color: #333;
 }
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack the list and text box vertically */
+    }
+
+    ul {
+        max-width: 100%; /* Make sure the list takes up full width */
+    }
+
+    #detailsBox {
+        max-width: 100%; /* Make sure the text box takes up full width */
+    }
+}
 
 .completed {
     text-decoration: line-through;
