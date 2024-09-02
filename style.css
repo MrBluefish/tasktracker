@@ -1,5 +1,5 @@
-body {
-    background: linear-gradient(#a7bcb9, #e0ebeb, #5dacbd);
+  body {
+      background: linear-gradient(#a7bcb9, #e0ebeb, #5dacbd);
     margin: 40px;
     padding: 20px;
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
@@ -27,7 +27,8 @@ h1 {
 
 #timerDisplay {
     font-size: 24px;
-    font-weight: bold;
+    font-weight:normal;
+    font-family: fantasy;
     background-color: #3ac2d6;
     color: #fdfdcb;
     padding: 10px;
@@ -57,7 +58,7 @@ ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    max-width: 500px;
+    max-width: 500px; /* Set the width of the list */
     min-width: 400px;
 }
 
@@ -74,43 +75,49 @@ li {
     border-radius: 5px;
 }
 
+label {
+    font-family: monospace;
+}
+.time-in {
+    border-radius: 3px;
+    font-family: monospace;
+}
 .container {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+    justify-content: space-around;
+    align-items: flex-start; /* Align items at the start of the container */
+    gap: 20px; /* Add space between the list and the text box */
 }
 
 #detailsBox {
     flex-grow: 1;
     max-width: 600px; 
     height: 8em;
-    max-height: 100%;
-    overflow-y: auto;
+    max-height: 100%; /* Set max height to the height of the unordered list */
+    overflow-y: auto; /* Add vertical scroll bar if content overflows */
     padding: 10px;
     border: 1px solid #3ac2d6;
     border-radius: 5px;
-    resize: none;
+    resize: none; /* Disable resizing */
     margin-top: 1em;
     background-color: #fdfdcb;
     color: #333;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 768px) {
     .container {
-        flex-direction: column;
+        flex-direction: column; /* Stack the list and text box vertically */
     }
 
     ul {
-        max-width: 100%;
+        max-width: 100%; /* Make sure the list takes up full width */
     }
 
     #detailsBox {
-        max-width: 100%;
+        max-width: 100%; /* Make sure the text box takes up full width */
     }
 }
-
 .completed {
     text-decoration: line-through;
     opacity: 0.5;
@@ -118,9 +125,9 @@ li {
 
 /* Dropdown menu styles */
 .dropdown {
-    margin-top: 20px;
     position: relative;
     display: inline-block;
+    margin-top: 10px;
 }
 
 .dropdown-content {
