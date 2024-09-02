@@ -11,6 +11,22 @@
     <h1>TaskTracker</h1>
     <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
 
+    <!-- Dropdown menu for buttons -->
+    <div class="dropdown">
+        <button onclick="toggleDropdown()">Actions</button>
+        <div id="dropdown-content" class="dropdown-content">
+            <button onclick="performAction(addItem)">Add Item</button>
+            <button onclick="performAction(clearAll)">Clear All</button>
+            <button onclick="performAction(markAllCompleted)">Mark All as Completed</button>
+            <button onclick="performAction(() => filterTasks('all'))">All</button>
+            <button onclick="performAction(() => filterTasks('completed'))">Completed</button>
+            <button onclick="performAction(() => filterTasks('incomplete'))">Incomplete</button>
+            <button onclick="performAction(saveList)">Save List</button>
+            <button onclick="performAction(shareList)">Share List</button>
+        </div>
+    </div>
+
+<ul id="todoList"></ul>
     <div class="timer-container">
         <label for="timeInput">Set Timer (seconds):</label>
         <input type="number" id="timeInput" min="0" placeholder="Enter seconds">
