@@ -9,15 +9,17 @@
 </head>
 <body>
     <h1>TaskTracker</h1>
-    <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
-
-    <ul id="todoList"></ul>
+        <ul id="todoList"></ul>
     <div class="timer-container">
         <label for="timeInput">Set Timer (seconds):</label>
         <input type="number" id="timeInput" min="0" placeholder="Enter seconds">
         <button onclick="startTimer()">Start Timer</button>
         <div id="timerDisplay">00:00</div>
     </div>
+    
+    <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
+
+
     <!-- Dropdown menu for buttons -->
     <div class="dropdown">
         <button onclick="toggleDropdown()">Actions</button>
