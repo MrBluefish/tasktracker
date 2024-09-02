@@ -17,9 +17,12 @@
     </div>
     
     <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
+    
+    <div class="container">
         <ul id="todoList"></ul>
-
-
+        <textarea id="detailsBox" placeholder="Enter details here..."></textarea>
+    </div>
+    
     <!-- Dropdown menu for buttons -->
     <div class="dropdown">
         <button onclick="toggleDropdown()">Actions</button>
@@ -34,11 +37,8 @@
             <button onclick="performAction(shareList)">Share List</button>
         </div>
     </div>
+</body>
 
-    <div class="container">
-        <ul id="todoList"></ul>
-        <textarea id="detailsBox" placeholder="Enter details here..."></textarea>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
