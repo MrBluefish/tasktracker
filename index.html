@@ -9,33 +9,36 @@
 </head>
 <body>
     <h1>TaskTracker</h1>
+    <div class="input-container">
     <input class="task-button" type="text" id="newItem" placeholder="Add a new task">
-
-    <!-- Dropdown menu for buttons -->
-<div class="dropdown">
-    <button onclick="toggleDropdown()">Actions</button>
-    <div id="dropdown-content" class="dropdown-content">
-        <button onclick="performAction(addItem)">Add Item</button>
-        <button onclick="performAction(clearAll)">Clear All</button>
-        <button onclick="performAction(markAllCompleted)">Mark All as Completed</button>
-        <button onclick="performAction(() => filterTasks('all'))">All</button>
-        <button onclick="performAction(() => filterTasks('completed'))">Completed</button>
-        <button onclick="performAction(() => filterTasks('incomplete'))">Incomplete</button>
-        <button onclick="performAction(saveList)">Save List</button>
-        <button onclick="performAction(shareList)">Share List</button>
+        <div class="dropdown">
+             <button onclick="toggleDropdown()" aria-label="Dropdown Actions">Actions</button>
+            <div id="dropdown-content" class="dropdown-content">
+            <button onclick="performAction(addItem)">Add Item</button>
+            <button onclick="performAction(clearAll)">Clear All</button>
+            <button onclick="performAction(markAllCompleted)">Mark All as Completed</button>
+            <button onclick="performAction(() => filterTasks('all'))">All</button>
+            <button onclick="performAction(() => filterTasks('completed'))">Completed</button>
+            <button onclick="performAction(() => filterTasks('incomplete'))">Incomplete</button>
+            <button onclick="performAction(saveList)">Save List</button>
+            <button onclick="performAction(shareList)">Share List</button>
+            </div>
+        </div>
     </div>
-</div>
     <div class="timer-container">
         <label for="timeInput">Set Timer (seconds):</label>
         <input class="time-in" type="number" id="timeInput" min="0" placeholder="Enter seconds">
-        <button onclick="startTimer()">Start Timer</button>
+        <div class="timerButtons">
+            <button class="start" onclick="startTimer()">Start</button>
+            <button class="pause" onclick="pauseTimer()">Pause</button>
+            <button class="reset" onclick="resetTimer()">Reset</button>
+        </div>
         <div id="timerDisplay">00:00</div>
     </div>
 
 
     <div class="container">
 <ul id="todoList"></ul>
-        <ul id="todoList"></ul>
         <textarea id="detailsBox" placeholder="Enter details here..."></textarea>
     </div>
 
@@ -53,34 +56,56 @@
 
         let timerInterval;
 
-        function startTimer() {
-            const inputSeconds = parseInt(document.getElementById('timeInput').value);
-            if (isNaN(inputSeconds) || inputSeconds <= 0) {
-                alert("Please enter a valid number of seconds.");
-                return;
-            }
+function startTimer() {
+    const inputSeconds = parseInt(document.getElementById('timeInput').value);
+    if (isNaN(inputSeconds) || inputSeconds <= 0) {
+        alert("Please enter a valid number of seconds.");
+        return;
+    }
 
-            let timeRemaining = inputSeconds;
-            updateTimerDisplay(timeRemaining);
+    let timeRemaining = inputSeconds;
+    updateTimerDisplay(timeRemaining);
 
+    // Disable the start button and enable pause/reset buttons
+    document.querySelector('.start').disabled = true;
+    document.querySelector('.pause').disabled = false;
+    document.querySelector('.reset').disabled = false;
+
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        timeRemaining--;
+        updateTimerDisplay(timeRemaining);
+
+        if (timeRemaining <= 0) {
             clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeRemaining--;
-                updateTimerDisplay(timeRemaining);
-
-                if (timeRemaining <= 0) {
-                    clearInterval(timerInterval);
-                    alert("Time's up!");
-                }
-            }, 1000);
+            alert("Time's up!");
+            document.querySelector('.start').disabled = false; // Re-enable start button when time's up
         }
+    }, 1000);
+}
 
-        function updateTimerDisplay(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            document.getElementById('timerDisplay').textContent =
-                `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-        }
+function pauseTimer() {
+    clearInterval(timerInterval);
+    // Re-enable the start button after pausing
+    document.querySelector('.start').disabled = false;
+}
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    updateTimerDisplay(0);
+    // Re-enable the start button and disable pause/reset
+    document.querySelector('.start').disabled = false;
+    document.querySelector('.pause').disabled = true;
+    document.querySelector('.reset').disabled = true;
+}
+
+function updateTimerDisplay(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    document.getElementById('timerDisplay').textContent =
+        `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
 
         function toggleDropdown() {
             document.getElementById("dropdown-content").classList.toggle("show");
@@ -96,40 +121,52 @@
         }
 
         function addItem() {
-            const newItem = document.getElementById('newItem').value;
-            if (newItem.trim() !== '') {
-                const todoList = document.getElementById('todoList');
-                const li = document.createElement('li');
+    const newItem = document.getElementById('newItem').value;
+    if (newItem.trim() !== '') {
+        const todoList = document.getElementById('todoList');
+        const li = document.createElement('li');
 
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.onchange = function() {
-                    this.parentElement.classList.toggle('completed');
-                    saveItems();
-                };
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.onchange = function() {
+            this.parentElement.classList.toggle('completed');
+            saveItems();
+        };
 
-                const label = document.createElement('label');
-                label.textContent = newItem;
-                label.ondblclick = function() {
-                    editItem(this);
-                };
+        const label = document.createElement('label');
+        label.textContent = newItem;
+        label.ondblclick = function() {
+            editItem(this);
+        };
 
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.onclick = function() {
-                    this.parentElement.remove();
-                    saveItems();
-                };
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.onclick = function() {
+            this.parentElement.remove();
+            saveItems();
+            checkTasks(); // Check tasks after deletion
+        };
 
-                li.appendChild(checkbox);
-                li.appendChild(label);
-                li.appendChild(deleteButton);
-                todoList.appendChild(li);
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        li.appendChild(deleteButton);
+        todoList.appendChild(li);
 
-                document.getElementById('newItem').value = ''; // Clear input field
-                saveItems();
-            }
-        }
+        document.getElementById('newItem').value = ''; // Clear input field
+        saveItems();
+        checkTasks(); // Show the details box after the first task is added
+    }
+}
+
+function checkTasks() {
+    const todoList = document.getElementById('todoList');
+    const detailsBox = document.getElementById('detailsBox');
+    if (todoList.children.length > 0) {
+        detailsBox.style.display = 'block'; // Show the details box
+    } else {
+        detailsBox.style.display = 'none'; // Hide the details box if no tasks
+    }
+}
 
         function editItem(label) {
             const newText = prompt("Edit your task:", label.textContent);
@@ -224,33 +261,59 @@
         }
 
         function saveList() {
-            const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
-            const blob = new Blob([JSON.stringify(todos, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'todo-list.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
+    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
 
-        function shareList() {
-            const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
-            const shareData = {
-                title: 'My To-Do List',
-                text: todos.map(item => `${item.completed ? '☑️' : '🔘'} ${item.text}`).join('\n')
-            };
+    // Convert JSON to CSV
+    let csvContent = "Task,Status\n"; // CSV headers
+    todos.forEach(todo => {
+        // Prevent Excel from interpreting task text as a formula
+        let task = todo.text.startsWith('=') ? `'${todo.text}` : todo.text;
+        let row = `${task},${todo.completed ? 'Completed' : 'Pending'}`;
+        csvContent += row + "\n";
+    });
 
-            if (navigator.share) {
-                navigator.share(shareData).then(() => {
-                    console.log('List shared successfully');
-                }).catch((error) => {
-                    console.error('Error sharing list:', error);
-                });
-            } else {
-                alert('Web Share API is not supported in your browser.');
-            }
-        }
+    // Create a Blob with CSV content
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+
+    // Create a link element and trigger download
+    const a = document.createElement('a');
+    a.href = url;
+    a.setAttribute('download', 'todo-list.csv');
+
+    // Append the anchor to the body, click it, and remove it afterwards
+    document.body.appendChild(a);
+    a.click();
+    
+    // Clean up
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+}
+function shareList() {
+    const todos = JSON.parse(localStorage.getItem('todoItems')) || [];
+    const shareData = {
+        title: 'My To-Do List',
+        text: todos.map(item => `${item.completed ? '☑️' : '🔘'} ${item.text}`).join('\n')
+    };
+
+    if (navigator.share) {
+        navigator.share(shareData).then(() => {
+            console.log('List shared successfully');
+        }).catch((error) => {
+            console.error('Error sharing list:', error);
+        });
+    } else {
+        // Fallback: Copy list to clipboard
+        const textArea = document.createElement("textarea");
+        textArea.value = shareData.text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        alert("To-do list copied to clipboard!");
+    }
+}
+
     </script>
 </body>
 </html>
