@@ -1,7 +1,7 @@
   body {
-      background: linear-gradient(#a7bcb9, #e0ebeb, #5dacbd);
+      background: linear-gradient(to right, #a7bcb9, #e0ebeb, #5dacbd);
     margin: 40px;
-    padding: 20px;
+    padding: 20px;                                                       
     box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
 }
 
@@ -18,26 +18,13 @@ h1 {
     margin-bottom: 2px;
 }
 
-.timer-container {
-    margin-bottom: 20px;
+.input-container {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    justify-content: center; /* Center the input and button horizontally */
+    align-items: center; /* Align them vertically */
+    gap: 10px; /* Add space between the input and the button */
+    margin-bottom: 20px; /* Add some margin at the bottom */
 }
-
-#timerDisplay {
-    font-size: 24px;
-    font-weight:normal;
-    font-family: fantasy;
-    background-color: #3ac2d6;
-    color: #fdfdcb;
-    padding: 10px;
-    border: 1px solid yellow;
-    border-radius: 5px;
-    width: 80px;
-    text-align: center;
-}
-
 #newItem {
     background-color: #154c79;
     padding: 10px;
@@ -47,11 +34,36 @@ h1 {
     color: white;
     font-family: monospace;
     width: 125px;
+    justify-content: center;
 }
 
-.task-button {
-    color: #ffc93c;
-    border: 2px solid black;
+
+.timer-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+@media (max-width: 600px) {
+    .timer-container {
+        font-size: 12px;
+    }
+}
+
+#timerDisplay {
+    font-size: 3em;
+    font-weight:normal;
+    font-family: fantasy;
+    background-color: #000000;
+    color: #ffff00;
+    padding: 10px;
+    border: 2px solid #3ac2d6;
+    border-radius: 5px;
+    width: 400px;
+    height: auto;
+    text-align: center;
 }
 
 ul {
@@ -88,22 +100,30 @@ label {
     justify-content: space-around;
     align-items: flex-start; /* Align items at the start of the container */
     gap: 20px; /* Add space between the list and the text box */
+    font-family: monospace;
 }
 
+.timeInput {
+    font-family: monospace;
+}
+
+
 #detailsBox {
+    display: none; /* Initially hidden */
     flex-grow: 1;
-    max-width: 600px; 
+    max-width: 100%; 
     height: 8em;
-    max-height: 100%; /* Set max height to the height of the unordered list */
-    overflow-y: auto; /* Add vertical scroll bar if content overflows */
+    max-height: 100%;
+    overflow-y: auto;
     padding: 10px;
     border: 1px solid #3ac2d6;
     border-radius: 5px;
-    resize: none; /* Disable resizing */
+    resize: none;
     margin-top: 1em;
     background-color: #fdfdcb;
     color: #333;
 }
+
 
 @media (max-width: 768px) {
     .container {
@@ -127,7 +147,7 @@ label {
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-top: 10px;
+   
 }
 
 .dropdown-content {
