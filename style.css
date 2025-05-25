@@ -6,14 +6,20 @@ html, body {
   background-color: #333; /* fallback dark color if anything ever peeks through */
 }
 
+html {
+     font-size: 18px;
+}
+
 body {
   background: radial-gradient(
     ellipse at top left,
-    #08738eb3 10%,
+    #08738e 10%,
     #054c68 15%,
-    #03a2d3bb 100%
+    #03a2d3 100%
   ) no-repeat center center;
-  background-size: 400vw 400vh;    /* remove any CSS @keyframes animation here */
+    background-size: 400vw 400vh;    /* remove any CSS @keyframes animation here */
+  line-height: 1.8;   /* a bit more breathing room */
+  font-size: 1rem;    /* now ~18px instead of 16px */
 }
 
 h1 {
