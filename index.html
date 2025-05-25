@@ -313,13 +313,13 @@ function shareList() {
         alert("To-do list copied to clipboard!");
     }
 }
-         function updateCountdownGradient() {
-    const now     = new Date();
-    const seconds = now.getSeconds();
+    function updateCountdownGradient() {
+        const now     = new Date();
+        const seconds = now.getSeconds();
     // Compute the fraction of the minute *remaining*
        const frac    = seconds / 60;              // 0…0.9833…
-    const xPct    = frac * 100;                // 0…98.33% → left→right
-    const yPct    = (1 - frac) * 100;          // 100…1.67% → bottom→top
+        const xPct    = frac * 100;                // 0…98.33% → left→right
+        const yPct    = (1 - frac) * 100;          // 100…1.67% → bottom→top
 
     document.body.style.backgroundPosition = 
       `${xPct.toFixed(2)}% ${yPct.toFixed(2)}%`;
