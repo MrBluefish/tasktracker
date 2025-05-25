@@ -1,10 +1,13 @@
-  body {
-      background: linear-gradient(to right, #a7bcb9, #e0ebeb, #5dacbd);
-    margin: 40px;
-    padding: 20px;                                                       
-    box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+body {
+  background: radial-gradient(
+    ellipse,
+    #08738eb3 10%,
+    #054c68 15%,
+    #03a2d3bb 100%
+  ) no-repeat center center;
+  background-size: 100% 500%;
+  /* remove any CSS @keyframes animation here */
 }
-
 h1 {
     display: flex;
     justify-content: center;
