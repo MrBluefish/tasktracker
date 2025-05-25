@@ -5,7 +5,7 @@ body {
     #054c68 15%,
     #03a2d3bb 100%
   ) no-repeat center center;
-  background-size: 100% 500%;
+  background-size: 500% 500%;
   /* remove any CSS @keyframes animation here */
 }
 h1 {
