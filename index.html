@@ -26,8 +26,8 @@
         </div>
     </div>
     <div class="timer-container">
-        <label for="timeInput">Set Timer (seconds):</label>
-        <input class="time-in" type="number" id="timeInput" min="0" placeholder="Enter seconds">
+        <label for="timeInput">Set Timer (minutes):</label>
+        <input class="time-in" type="number" id="timeInput" min="0" placeholder="Enter time">
         <div class="timerButtons">
             <button class="start" onclick="startTimer()">Start</button>
             <button class="pause" onclick="pauseTimer()">Pause</button>
@@ -57,9 +57,9 @@
         let timerInterval;
 
 function startTimer() {
-    const inputSeconds = parseInt(document.getElementById('timeInput').value);
-    if (isNaN(inputSeconds) || inputSeconds <= 0) {
-        alert("Please enter a valid number of seconds.");
+    const inputMinutes = parseInt(document.getElementById('timeInput').value);
+    if (isNaN(inputMinutes) || inputMinutes <= 0) {
+        alert("Please enter a valid number of minutes.");
         return;
     }
 
